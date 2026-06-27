@@ -1,0 +1,56 @@
+---
+/**
+ * Brand logo: "HC" monogram in a bordered square + "Henry Crawl" wordmark.
+ *
+ * The mark uses `currentColor` so it inherits the surrounding text color
+ * (forest green on light surfaces, white on the dark footer). Set
+ * `showWordmark={false}` to render the mark alone.
+ */
+type Props = {
+  /** Tailwind classes controlling the mark color, e.g. "text-forest-700". */
+  markClass?: string;
+  /** Render the "Henry Crawl" wordmark next to the mark. */
+  showWordmark?: boolean;
+  /** Color for "Henry" — defaults to ink; footer overrides to white. */
+  wordmarkClass?: string;
+  /** Color for the "Crawl" accent word — lighten on dark surfaces. */
+  accentClass?: string;
+  /** Extra classes on the mark's sizing box. */
+  size?: string;
+};
+
+const {
+  markClass = "text-forest-700",
+  showWordmark = true,
+  wordmarkClass = "text-ink",
+  accentClass = "text-forest-700",
+  size = "h-11 w-11",
+} = Astro.props;
+---
+
+<span class="flex items-center gap-3">
+  <svg
+    aria-hidden="true"
+    viewBox="0 0 100 100"
+    class:list={["shrink-0", size, markClass]}
+    fill="none"
+    stroke="currentColor"
+  >
+    <rect x="6" y="6" width="88" height="88" rx="4" stroke-width="5" />
+    <!-- H -->
+    <rect x="29" y="31" width="8" height="38" fill="currentColor" stroke="none" rx="1" />
+    <rect x="29" y="46" width="26" height="8" fill="currentColor" stroke="none" rx="1" />
+    <!-- C, interlocking with the H crossbar -->
+    <path
+      d="M69.5 35.5 A18 18 0 1 0 69.5 64.5"
+      stroke-width="8"
+      stroke-linecap="round"
+    />
+  </svg>
+
+  {showWordmark && (
+    <span class:list={["text-base font-extrabold leading-none tracking-tight", wordmarkClass]}>
+      Henry <span class:list={accentClass}>Crawl</span>
+    </span>
+  )}
+</span>
