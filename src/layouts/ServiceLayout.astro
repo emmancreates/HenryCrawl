@@ -1,0 +1,261 @@
+---
+import BaseLayout from "@layouts/BaseLayout.astro";
+import Breadcrumbs from "@components/Breadcrumbs.astro";
+import CTASection from "@components/CTASection.astro";
+import FAQ from "@components/FAQ.astro";
+import InternalLinks from "@components/InternalLinks.astro";
+import SectionHeading from "@components/SectionHeading.astro";
+import ServiceCard from "@components/ServiceCard.astro";
+import { getRelatedServices, type Service } from "@data/services";
+import { locations } from "@data/locations";
+import { site } from "@data/site";
+import { buildGraph, breadcrumbNode, businessId } from "@data/schema";
+
+type Props = {
+  service: Service;
+};
+
+const { service } = Astro.props;
+const related = getRelatedServices(service.slug);
+const title = service.metaTitle;
+const description = service.metaDescription;
+const pageUrl = new URL(`/${service.slug}/`, site.url).toString();
+const crumbs = [
+  { label: "Home", href: "/" },
+  { label: "Services", href: "/services/" },
+  { label: service.title }
+];
+const nearby = locations.filter((location) => ["mcdonough-ga", "stockbridge-ga", "locust-grove-ga", "hampton-ga"].includes(location.slug));
+const serviceSchema = {
+  "@type": "Service",
+  name: service.title,
+  serviceType: service.title,
+  description,
+  image: new URL(service.image.src, site.url).toString(),
+  url: pageUrl,
+  areaServed: nearby.map((location) => ({
+    "@type": "City",
+    name: `${location.city}, GA`
+  })),
+  provider: { "@id": businessId },
+  offers: {
+    "@type": "Offer",
+    description: `Free crawl space inspection and written ${service.title.toLowerCase()} estimate`,
+    availability: "https://schema.org/InStock",
+    areaServed: site.primaryLocation
+  }
+};
+const faqSchema = {
+  "@type": "FAQPage",
+  mainEntity: service.faqs.map((faq) => ({
+    "@type": "Question",
+    name: faq.question,
+    acceptedAnswer: { "@type": "Answer", text: faq.answer }
+  })),
+  speakable: {
+    "@type": "SpeakableSpecification",
+    cssSelector: ["h1", ".service-quick-facts"]
+  }
+};
+const howToSchema = {
+  "@type": "HowTo",
+  name: `How ${service.title.toLowerCase()} works in McDonough, GA`,
+  description: service.shortAnswer,
+  step: service.process.map((step, index) => ({
+    "@type": "HowToStep",
+    position: index + 1,
+    name: step.title,
+    text: step.text
+  }))
+};
+const schema = buildGraph([serviceSchema, faqSchema, howToSchema, breadcrumbNode(crumbs)]);
+---
+
+<BaseLayout title={title} description={description} canonical={`/${service.slug}/`} image={service.image.src} schema={schema}>
+  <Breadcrumbs crumbs={crumbs} />
+  <section class="relative overflow-hidden border-b border-stonewash/70 bg-mesh py-16">
+    <div class="pointer-events-none absolute -right-24 -top-20 h-72 w-72 rounded-full bg-forest-200/40 blur-3xl"></div>
+    <div class="container relative grid gap-10 lg:grid-cols-[1fr_360px] lg:items-start">
+      <div class="animate-fade-up">
+        <span class="eyebrow"><span class="h-1.5 w-1.5 rounded-full bg-clay"></span>{service.primaryKeyword}</span>
+        <h1 class="font-display mt-5 text-4xl font-semibold leading-[1.05] text-ink sm:text-5xl">{service.title} in McDonough, GA</h1>
+        <p class="mt-6 max-w-3xl text-lg leading-8 text-ink/70">{service.shortAnswer}</p>
+        <div class="mt-8 flex flex-col gap-3 sm:flex-row">
+          <a class="btn-primary" href="/contact/">{site.primaryCta}</a>
+          <a class="btn-ghost" href={site.phoneHref}>{site.shortCta}</a>
+        </div>
+      </div>
+      <aside class="card overflow-hidden">
+        <img
+          class="aspect-[3/2] w-full object-cover"
+          src={service.image.src}
+          alt={service.image.alt}
+          width="1200"
+          height="800"
+          loading="eager"
+          decoding="async"
+        />
+        <div class="p-7">
+          <h2 class="text-lg font-extrabold text-ink">Related search topics</h2>
+          <ul class="mt-5 space-y-3 text-sm text-ink/70">
+            {service.relatedKeywords.map((keyword) => (
+              <li class="flex items-start gap-2.5 rounded-xl bg-sand/60 px-3.5 py-2.5 font-semibold">
+                <span class="mt-1.5 h-1.5 w-1.5 shrink-0 rounded-full bg-clay"></span>{keyword}
+              </li>
+            ))}
+          </ul>
+        </div>
+      </aside>
+    </div>
+  </section>
+
+  <section class="py-20">
+    <div class="container grid gap-12 lg:grid-cols-[1fr_360px] lg:items-start">
+      <div class="animate-fade-up">
+        <SectionHeading eyebrow="Overview" title={`What is ${service.title.toLowerCase()}?`} />
+        <div class="mt-7 space-y-5 text-lg leading-8 text-ink/70">
+          {service.overview.map((paragraph) => <p>{paragraph}</p>)}
+        </div>
+      </div>
+      <aside class="service-quick-facts card border-forest-200/70 bg-forest-50/40 p-7 lg:sticky lg:top-28">
+        <h2 class="flex items-center gap-2 text-sm font-extrabold uppercase tracking-wide text-forest-700">
+          <svg aria-hidden="true" viewBox="0 0 24 24" class="h-5 w-5" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 18h6" /><path d="M10 22h4" /><path d="M15.09 14c.18-.98.65-1.74 1.41-2.5A4.65 4.65 0 0 0 18 8 6 6 0 0 0 6 8c0 1 .23 2.23 1.5 3.5A4.61 4.61 0 0 1 8.91 14" /></svg>
+          Quick facts
+        </h2>
+        <ul class="mt-5 space-y-4 text-sm leading-6 text-ink/75">
+          {service.quickFacts.map((fact) => (
+            <li class="flex items-start gap-2.5">
+              <span class="mt-1.5 grid h-4 w-4 shrink-0 place-items-center rounded-full bg-forest-600 text-white"><svg aria-hidden="true" viewBox="0 0 24 24" class="h-3 w-3" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6 9 17l-5-5" /></svg></span>
+              {fact}
+            </li>
+          ))}
+        </ul>
+        <a class="btn-primary mt-7 w-full justify-center" href="/contact/">{site.primaryCta}</a>
+      </aside>
+    </div>
+  </section>
+
+  <section class="border-y border-stonewash/70 bg-sand/50 py-20">
+    <div class="container grid gap-10 lg:grid-cols-2">
+      <div>
+        <SectionHeading eyebrow="What to watch for" title="Problem signs to look for" />
+        <ul class="mt-7 grid gap-3">
+          {service.problemSigns.map((item) => (
+            <li class="flex items-center gap-3 rounded-2xl border border-stonewash/80 bg-white p-4 text-ink/80 shadow-card">
+              <span class="grid h-8 w-8 shrink-0 place-items-center rounded-lg bg-clay-50 text-clay-600"><svg aria-hidden="true" viewBox="0 0 24 24" class="h-4 w-4" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 9v4" /><path d="M12 17h.01" /><path d="M10.3 3.9 1.8 18a2 2 0 0 0 1.7 3h17a2 2 0 0 0 1.7-3L13.7 3.9a2 2 0 0 0-3.4 0Z" /></svg></span>
+              {item}
+            </li>
+          ))}
+        </ul>
+      </div>
+      <div>
+        <SectionHeading eyebrow="Scope" title="What this service can include" />
+        <ul class="mt-7 grid gap-3">
+          {service.includes.map((item) => (
+            <li class="flex items-center gap-3 rounded-2xl border border-stonewash/80 bg-white p-4 text-ink/80 shadow-card">
+              <span class="grid h-8 w-8 shrink-0 place-items-center rounded-lg bg-forest-50 text-forest-600"><svg aria-hidden="true" viewBox="0 0 24 24" class="h-4 w-4" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6 9 17l-5-5" /></svg></span>
+              {item}
+            </li>
+          ))}
+        </ul>
+      </div>
+    </div>
+  </section>
+
+  <section class="py-20">
+    <div class="container">
+      <SectionHeading eyebrow="How it works" title={`The ${service.title.toLowerCase()} process`} text="A clear, step-by-step approach so you know what to expect from the first inspection to the finished result." />
+      <ol class="mt-12 grid gap-6 md:grid-cols-2 lg:grid-cols-5">
+        {service.process.map((step, index) => (
+          <li class="relative card p-6">
+            <span class="grid h-11 w-11 place-items-center rounded-xl bg-forest-radial text-lg font-extrabold text-white shadow-glow">{index + 1}</span>
+            <h3 class="mt-5 text-base font-extrabold text-ink">{step.title}</h3>
+            <p class="mt-2.5 text-sm leading-6 text-ink/70">{step.text}</p>
+          </li>
+        ))}
+      </ol>
+    </div>
+  </section>
+
+  <section class="border-y border-stonewash/70 bg-sand/50 py-20">
+    <div class="container">
+      <SectionHeading eyebrow="Cost factors" title={`What affects ${service.title.toLowerCase()} cost`} text="Every crawl space is different, so the final price depends on the conditions found during the inspection. These are the factors that move the estimate." />
+      <div class="mt-10 overflow-hidden rounded-2xl border border-stonewash/80 bg-white shadow-card">
+        <dl class="divide-y divide-stonewash/70">
+          {service.costFactors.map((item) => (
+            <div class="grid gap-2 p-6 sm:grid-cols-[260px_1fr] sm:gap-8">
+              <dt class="flex items-start gap-2.5 font-extrabold text-ink">
+                <span class="mt-1 h-1.5 w-1.5 shrink-0 rounded-full bg-clay"></span>{item.factor}
+              </dt>
+              <dd class="text-sm leading-7 text-ink/70">{item.detail}</dd>
+            </div>
+          ))}
+        </dl>
+      </div>
+      <p class="mt-6 text-sm leading-7 text-ink/60">
+        Henry Crawl Solutions provides a written estimate after a free crawl space inspection in {site.primaryLocation} and Henry County — no obligation, and no one-size pricing.
+      </p>
+    </div>
+  </section>
+
+  <section class="py-20">
+    <div class="container">
+      <SectionHeading eyebrow="Benefits" title={`Why homeowners request ${service.title.toLowerCase()}`} />
+      <div class="mt-10 grid gap-5 md:grid-cols-2 lg:grid-cols-4">
+        {service.reasons.map((reason) => (
+          <article class="card p-6">
+            <span class="grid h-10 w-10 place-items-center rounded-xl bg-forest-radial text-white shadow-glow"><svg aria-hidden="true" viewBox="0 0 24 24" class="h-5 w-5" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6 9 17l-5-5" /></svg></span>
+            <p class="mt-4 text-sm leading-6 text-ink/70">{reason}</p>
+          </article>
+        ))}
+      </div>
+    </div>
+  </section>
+
+  <section class="border-y border-stonewash/70 bg-sand/50 py-20">
+    <div class="container">
+      <div class="mb-10 flex flex-col gap-4 md:flex-row md:items-end md:justify-between">
+        <SectionHeading eyebrow="Related" title="Related crawl space services" text="Moisture problems often overlap, so these pages can help you compare related options." />
+        <a class="focus-ring inline-flex shrink-0 items-center gap-1.5 rounded-full border border-forest-200 bg-white px-5 py-2.5 text-sm font-bold text-forest-700 transition hover:-translate-y-0.5 hover:border-forest-400" href="/services/">View all services<svg aria-hidden="true" viewBox="0 0 24 24" class="h-4 w-4" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14" /><path d="m13 6 6 6-6 6" /></svg></a>
+      </div>
+      <div class="grid gap-5 md:grid-cols-3">
+        {related.map((item) => <ServiceCard title={item.title} href={`/${item.slug}/`} excerpt={item.excerpt} slug={item.slug} image={item.image.src} imageAlt={item.image.alt} />)}
+      </div>
+    </div>
+  </section>
+
+  <section class="py-20">
+    <div class="container grid gap-8 lg:grid-cols-[1fr_1fr]">
+      <div>
+        <SectionHeading eyebrow="Nearby" title="Popular nearby service areas" />
+        <div class="mt-7 grid gap-3 sm:grid-cols-2">
+          {nearby.map((location) => (
+            <a class="focus-ring inline-flex items-center gap-2.5 rounded-2xl border border-stonewash/80 bg-white p-4 font-bold text-forest-700 transition hover:-translate-y-0.5 hover:border-forest-300 hover:shadow-card" href={`/service-areas/${location.slug}/`}>
+              <svg aria-hidden="true" viewBox="0 0 24 24" class="h-5 w-5 text-forest-500" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M20 10c0 6-8 12-8 12s-8-6-8-12a8 8 0 0 1 16 0Z" /><circle cx="12" cy="10" r="2.5" /></svg>
+              {location.city}, GA
+            </a>
+          ))}
+        </div>
+      </div>
+      <InternalLinks
+        title="Service area links"
+        links={[
+          { label: "McDonough crawl space services", href: "/service-areas/mcdonough-ga/" },
+          { label: "All service areas", href: "/service-areas/" },
+          { label: "Request an inspection", href: "/contact/" }
+        ]}
+      />
+    </div>
+  </section>
+
+  <section class="border-y border-stonewash/70 bg-sand/50 py-20">
+    <div class="container">
+      <SectionHeading eyebrow="Good to know" title={`${service.title} FAQ`} align="center" />
+      <div class="mt-12">
+        <FAQ items={service.faqs} />
+      </div>
+    </div>
+  </section>
+
+  <CTASection title={`Request a ${service.title.toLowerCase()} estimate`} />
+</BaseLayout>

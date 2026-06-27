@@ -1,0 +1,12 @@
+---
+import LocationLayout from "@layouts/LocationLayout.astro";
+import { getLocation, locations } from "@data/locations";
+
+export function getStaticPaths() {
+  return locations.map((location) => ({ params: { slug: location.slug } }));
+}
+
+const location = getLocation(Astro.params.slug!)!;
+---
+
+<LocationLayout location={location} />

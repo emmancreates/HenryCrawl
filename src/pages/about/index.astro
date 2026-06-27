@@ -1,0 +1,67 @@
+---
+import BaseLayout from "@layouts/BaseLayout.astro";
+import Breadcrumbs from "@components/Breadcrumbs.astro";
+import CTASection from "@components/CTASection.astro";
+import PageHero from "@components/PageHero.astro";
+import ProcessSteps from "@components/ProcessSteps.astro";
+import SectionHeading from "@components/SectionHeading.astro";
+import { site } from "@data/site";
+import { buildGraph, breadcrumbNode, businessId } from "@data/schema";
+
+const title = "Crawl Space Specialists in McDonough & Henry County, GA | Henry Crawl Solutions";
+const description = "Henry Crawl Solutions helps McDonough and Henry County homeowners diagnose and fix crawl space moisture, vapor barrier, drainage, dehumidifier, encapsulation, and waterproofing problems.";
+
+const aboutSchema = {
+  "@type": "AboutPage",
+  name: title,
+  description,
+  url: new URL("/about/", site.url).toString(),
+  mainEntity: { "@id": businessId }
+};
+const schema = buildGraph([aboutSchema, breadcrumbNode([{ label: "Home", href: "/" }, { label: "About" }])]);
+
+const asks = [
+  "Crawl space encapsulation and vapor barriers",
+  "Wet crawl space repair and drainage",
+  "Moisture control and dehumidifier installation",
+  "Musty odors and mold-related crawl space concerns"
+];
+---
+
+<BaseLayout title={title} description={description} canonical="/about/" schema={schema}>
+  <Breadcrumbs crumbs={[{ label: "Home", href: "/" }, { label: "About" }]} />
+  <PageHero
+    eyebrow="Crawl space specialists"
+    title="Crawl space help built around McDonough &amp; Henry County, GA"
+    text="Henry Crawl Solutions focuses on one thing: helping local homeowners understand and fix what is happening under their home, from crawl space moisture and vapor barriers to drainage, dehumidifiers, encapsulation, and basement waterproofing."
+  />
+  <section class="py-20">
+    <div class="container grid gap-10 lg:grid-cols-2 lg:items-center">
+      <SectionHeading
+        eyebrow="Our approach"
+        title="A clear, no-pressure path for homeowners"
+        text="Every project starts with a straightforward crawl space inspection. The goal is to identify the real moisture source, explain the practical options in plain language, and give you an honest estimate for the work that actually solves the problem — not a one-size-fits-all upsell."
+      />
+      <div class="card p-7">
+        <h2 class="text-xl font-extrabold text-ink">What homeowners can ask about</h2>
+        <ul class="mt-5 grid gap-3">
+          {asks.map((item) => (
+            <li class="flex items-center gap-3 rounded-2xl bg-sand/60 p-4 text-sm font-semibold text-ink/80">
+              <span class="grid h-7 w-7 shrink-0 place-items-center rounded-lg bg-forest-50 text-forest-600"><svg aria-hidden="true" viewBox="0 0 24 24" class="h-4 w-4" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6 9 17l-5-5" /></svg></span>
+              {item}
+            </li>
+          ))}
+        </ul>
+      </div>
+    </div>
+  </section>
+  <section class="border-y border-stonewash/70 bg-sand/50 py-20">
+    <div class="container">
+      <SectionHeading eyebrow="Process" title="How requests are handled" align="center" />
+      <div class="mt-12">
+        <ProcessSteps />
+      </div>
+    </div>
+  </section>
+  <CTASection />
+</BaseLayout>

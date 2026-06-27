@@ -1,0 +1,21 @@
+---
+type Props = {
+  eyebrow?: string;
+  title: string;
+  text?: string;
+};
+
+const { eyebrow, title, text } = Astro.props;
+---
+
+<section class="relative overflow-hidden border-b border-stonewash/70 bg-mesh py-16">
+  <div class="pointer-events-none absolute -right-24 -top-20 h-72 w-72 rounded-full bg-forest-200/40 blur-3xl"></div>
+  <div class="pointer-events-none absolute -left-20 bottom-0 h-56 w-56 rounded-full bg-clay-100/40 blur-3xl"></div>
+  <div class="container relative max-w-4xl animate-fade-up">
+    {eyebrow && (
+      <span class="eyebrow"><span class="h-1.5 w-1.5 rounded-full bg-clay"></span>{eyebrow}</span>
+    )}
+    <h1 class="font-display mt-5 text-4xl font-semibold leading-[1.05] text-ink sm:text-5xl">{title}</h1>
+    {text && <p class="mt-6 text-lg leading-8 text-ink/70">{text}</p>}
+  </div>
+</section>

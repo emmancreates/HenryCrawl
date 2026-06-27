@@ -1,0 +1,68 @@
+---
+import BaseLayout from "@layouts/BaseLayout.astro";
+import Breadcrumbs from "@components/Breadcrumbs.astro";
+import CTASection from "@components/CTASection.astro";
+import InternalLinks from "@components/InternalLinks.astro";
+import PageHero from "@components/PageHero.astro";
+import ServiceGrid from "@components/ServiceGrid.astro";
+import { services } from "@data/services";
+import { site } from "@data/site";
+import { buildGraph, breadcrumbNode } from "@data/schema";
+
+const title = "Crawl Space Services in Henry County, GA | Henry Crawl Solutions";
+const description = "Explore crawl space encapsulation, repair, vapor barrier installation, moisture control, mold removal, drainage, dehumidifier installation, and basement waterproofing services.";
+
+const collectionSchema = {
+  "@type": "CollectionPage",
+  name: title,
+  description,
+  url: new URL("/services/", site.url).toString(),
+  mainEntity: {
+    "@type": "ItemList",
+    itemListElement: services.map((service, index) => ({
+      "@type": "ListItem",
+      position: index + 1,
+      name: service.title,
+      url: new URL(`/${service.slug}/`, site.url).toString()
+    }))
+  }
+};
+const schema = buildGraph([collectionSchema, breadcrumbNode([{ label: "Home", href: "/" }, { label: "Services" }])]);
+---
+
+<BaseLayout title={title} description={description} canonical="/services/" schema={schema}>
+  <Breadcrumbs crumbs={[{ label: "Home", href: "/" }, { label: "Services" }]} />
+  <PageHero
+    eyebrow="Service hub"
+    title="Crawl Space Services in Henry County, GA"
+    text="Compare crawl space encapsulation, repair, vapor barrier, drainage, dehumidifier, mold-related, and basement waterproofing options for homes near McDonough."
+  />
+  <section class="py-20">
+    <div class="container">
+      <ServiceGrid />
+    </div>
+  </section>
+  <section class="border-y border-stonewash/70 bg-sand/50 py-20">
+    <div class="container grid gap-8 lg:grid-cols-2">
+      <InternalLinks
+        title="Popular in Henry County"
+        links={[
+          { label: "Crawl Space Encapsulation", href: "/crawl-space-encapsulation/" },
+          { label: "Vapor Barrier Installation", href: "/vapor-barrier-installation/" },
+          { label: "Crawl Space Moisture Control", href: "/crawl-space-moisture-control/" },
+          { label: "Wet Crawl Space Repair", href: "/wet-crawl-space-repair/" }
+        ]}
+      />
+      <InternalLinks
+        title="Service area links"
+        links={[
+          { label: "McDonough, GA", href: "/service-areas/mcdonough-ga/" },
+          { label: "Stockbridge, GA", href: "/service-areas/stockbridge-ga/" },
+          { label: "Locust Grove, GA", href: "/service-areas/locust-grove-ga/" },
+          { label: "Hampton, GA", href: "/service-areas/hampton-ga/" }
+        ]}
+      />
+    </div>
+  </section>
+  <CTASection title="Request a crawl space service estimate" />
+</BaseLayout>

@@ -1,0 +1,66 @@
+---
+import BaseLayout from "@layouts/BaseLayout.astro";
+import Breadcrumbs from "@components/Breadcrumbs.astro";
+import CTASection from "@components/CTASection.astro";
+import LocationGrid from "@components/LocationGrid.astro";
+import PageHero from "@components/PageHero.astro";
+import SectionHeading from "@components/SectionHeading.astro";
+import ServiceGrid from "@components/ServiceGrid.astro";
+import { locations } from "@data/locations";
+import { site } from "@data/site";
+import { buildGraph, breadcrumbNode } from "@data/schema";
+
+const title = "Crawl Space Service Areas in Henry County, GA | Henry Crawl Solutions";
+const description = "Henry Crawl Solutions serves McDonough, Stockbridge, Locust Grove, Hampton, Lovejoy, Ola, Jackson, Jonesboro, and nearby Georgia service areas.";
+
+const collectionSchema = {
+  "@type": "CollectionPage",
+  name: title,
+  description,
+  url: new URL("/service-areas/", site.url).toString(),
+  mainEntity: {
+    "@type": "ItemList",
+    itemListElement: locations.map((location, index) => ({
+      "@type": "ListItem",
+      position: index + 1,
+      name: `${location.city}, GA`,
+      url: new URL(`/service-areas/${location.slug}/`, site.url).toString()
+    }))
+  }
+};
+const schema = buildGraph([collectionSchema, breadcrumbNode([{ label: "Home", href: "/" }, { label: "Service Areas" }])]);
+---
+
+<BaseLayout title={title} description={description} canonical="/service-areas/" schema={schema}>
+  <Breadcrumbs crumbs={[{ label: "Home", href: "/" }, { label: "Service Areas" }]} />
+  <PageHero
+    eyebrow="Where we work"
+    title="Crawl Space Service Areas in Henry County, GA"
+    text="Find crawl space encapsulation, repair, vapor barrier, moisture control, drainage, and dehumidifier service information for McDonough and nearby communities."
+  />
+  <section class="py-20">
+    <div class="container">
+      <SectionHeading eyebrow="Primary coverage" title="Primary service area" />
+      <div class="mt-10">
+        <LocationGrid slugs={["mcdonough-ga", "stockbridge-ga", "locust-grove-ga", "hampton-ga"]} />
+      </div>
+    </div>
+  </section>
+  <section class="border-y border-stonewash/70 bg-sand/50 py-20">
+    <div class="container">
+      <SectionHeading eyebrow="Also serving" title="Nearby service areas" />
+      <div class="mt-10">
+        <LocationGrid slugs={["lovejoy-ga", "ola-ga", "jackson-ga", "jonesboro-ga"]} />
+      </div>
+    </div>
+  </section>
+  <section class="py-20">
+    <div class="container">
+      <SectionHeading eyebrow="Services" title="Services available by area" />
+      <div class="mt-10">
+        <ServiceGrid />
+      </div>
+    </div>
+  </section>
+  <CTASection title="Request a crawl space inspection in your area" />
+</BaseLayout>

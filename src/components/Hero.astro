@@ -1,0 +1,74 @@
+---
+import { site } from "@data/site";
+
+type Props = {
+  title: string;
+  subheadline: string;
+  image?: string;
+};
+
+const { title, subheadline, image = "/crawl-space-hero.png" } = Astro.props;
+
+const chips = ["Moisture & odor concerns", "Wet crawl space checks", "Henry County service areas"];
+---
+
+<section class="relative overflow-hidden border-b border-stonewash/70 bg-mesh">
+  <div class="pointer-events-none absolute -left-32 -top-24 h-80 w-80 rounded-full bg-forest-200/40 blur-3xl"></div>
+  <div class="pointer-events-none absolute -right-24 top-40 h-72 w-72 rounded-full bg-clay-100/50 blur-3xl"></div>
+
+  <div class="container relative grid items-center gap-14 py-16 lg:grid-cols-[1.05fr_0.95fr] lg:py-24">
+    <div class="max-w-3xl animate-fade-up">
+      <span class="eyebrow">
+        <span class="h-1.5 w-1.5 rounded-full bg-clay"></span>
+        {site.tagline}
+      </span>
+      <h1 class="font-display mt-6 text-[2.6rem] font-semibold leading-[1.04] text-ink sm:text-6xl lg:text-[4.1rem]">
+        {title}
+      </h1>
+      <p class="mt-7 max-w-2xl text-lg leading-8 text-ink/70">{subheadline}</p>
+
+      <div class="mt-9 flex flex-col gap-3 sm:flex-row">
+        <a class="btn-primary whitespace-nowrap text-lg" href={site.phoneHref}>
+          <svg aria-hidden="true" viewBox="0 0 24 24" class="h-5 w-5" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6A19.79 19.79 0 0 1 2.1 4.18 2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72c.13.96.36 1.9.7 2.81a2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45c.91.34 1.85.57 2.81.7A2 2 0 0 1 22 16.92Z" /></svg>
+          <span class="font-extrabold tracking-wide">{site.phone}</span>
+        </a>
+        <a class="btn-ghost" href="/contact/">{site.primaryCta}</a>
+      </div>
+
+      <div class="mt-10 flex flex-wrap gap-2.5">
+        {chips.map((chip) => (
+          <span class="inline-flex items-center gap-2 rounded-full border border-stonewash bg-white/70 px-4 py-2 text-sm font-semibold text-ink/75 backdrop-blur">
+            <svg aria-hidden="true" viewBox="0 0 24 24" class="h-4 w-4 text-forest-500" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6 9 17l-5-5" /></svg>
+            {chip}
+          </span>
+        ))}
+      </div>
+    </div>
+
+    <div class="relative animate-fade-up [animation-delay:120ms]">
+      <div class="pointer-events-none absolute -right-6 -top-6 hidden h-28 w-28 rounded-3xl border border-forest-200 bg-white/50 backdrop-blur lg:block"></div>
+      <div class="pointer-events-none absolute -left-7 bottom-16 hidden h-20 w-20 rounded-2xl bg-clay/15 lg:block"></div>
+
+      <div class="relative overflow-hidden rounded-[2rem] border border-white/60 bg-white p-2 shadow-lift">
+        <img
+          class="aspect-[4/3.4] w-full rounded-[1.6rem] object-cover"
+          src={image}
+          alt="Clean crawl space with a fresh vapor barrier installed under a home"
+          loading="eager"
+        />
+      </div>
+
+      <div class="absolute -bottom-6 left-5 right-10 rounded-2xl border border-white/70 bg-cream/90 p-4 shadow-soft backdrop-blur sm:right-auto sm:max-w-xs">
+        <div class="flex items-center gap-3">
+          <span class="grid h-10 w-10 shrink-0 place-items-center rounded-xl bg-forest-radial text-white">
+            <svg aria-hidden="true" viewBox="0 0 24 24" class="h-5 w-5" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M9 11a3 3 0 1 0 6 0c0-2-3-6-3-6s-3 4-3 6Z" /><path d="M5 19c2-3 5 1 7-1s5 1 7-1" /></svg>
+          </span>
+          <div>
+            <p class="text-sm font-bold text-ink">Free inspection requests</p>
+            <p class="mt-0.5 text-xs leading-5 text-ink/65">Describe moisture, standing water, vapor barrier, or odor concerns.</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>

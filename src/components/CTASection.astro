@@ -1,0 +1,39 @@
+---
+import { site } from "@data/site";
+
+type Props = {
+  title?: string;
+  text?: string;
+};
+
+const {
+  title = "Ready to look at the crawl space?",
+  text = "Request a free inspection and share what you are seeing under the home. Henry Crawl Solutions will use the details to help route the right crawl space estimate."
+} = Astro.props;
+---
+
+<section class="py-16">
+  <div class="container">
+    <div class="relative overflow-hidden rounded-[2rem] bg-forest-radial px-8 py-14 text-white shadow-glow sm:px-12 lg:px-16">
+      <div class="pointer-events-none absolute -right-16 -top-16 h-64 w-64 rounded-full bg-white/10 blur-2xl"></div>
+      <div class="pointer-events-none absolute -bottom-20 -left-10 h-56 w-56 rounded-full bg-clay/20 blur-2xl"></div>
+      <div class="relative grid gap-8 lg:grid-cols-[1fr_auto] lg:items-center">
+        <div>
+          <span class="eyebrow text-forest-200">
+            <span class="h-1.5 w-1.5 rounded-full bg-honey"></span>
+            Free crawl space inspection
+          </span>
+          <h2 class="font-display mt-4 text-3xl font-semibold leading-tight sm:text-4xl">{title}</h2>
+          <p class="mt-4 max-w-3xl text-base leading-7 text-white/80">{text}</p>
+        </div>
+        <div class="flex flex-col gap-3 sm:flex-row lg:flex-col xl:flex-row">
+          <a class="focus-ring inline-flex items-center justify-center gap-2 rounded-full bg-white px-7 py-3.5 text-center text-base font-bold text-forest-700 transition hover:-translate-y-0.5 hover:bg-forest-50" href="/contact/">
+            {site.primaryCta}
+            <svg aria-hidden="true" viewBox="0 0 24 24" class="h-5 w-5" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14" /><path d="m13 6 6 6-6 6" /></svg>
+          </a>
+          <a class="focus-ring inline-flex items-center justify-center rounded-full border border-white/40 px-7 py-3.5 text-center text-base font-bold text-white transition hover:-translate-y-0.5 hover:bg-white/10" href={site.phoneHref}>{site.secondaryCta}</a>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>

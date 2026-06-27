@@ -1,0 +1,12 @@
+{
+  "name": "Henry Crawl Solutions",
+  "short_name": "Henry Crawl",
+  "description": "Crawl space encapsulation, repair, and moisture control in McDonough & Henry County, GA.",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#ffffff",
+  "theme_color": "#1f5132",
+  "icons": [
+    { "src": "/favicon.svg", "sizes": "any", "type": "image/svg+xml", "purpose": "any" }
+  ]
+}

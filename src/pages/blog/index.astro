@@ -1,0 +1,69 @@
+---
+import BaseLayout from "@layouts/BaseLayout.astro";
+import Breadcrumbs from "@components/Breadcrumbs.astro";
+import CTASection from "@components/CTASection.astro";
+import InternalLinks from "@components/InternalLinks.astro";
+import PageHero from "@components/PageHero.astro";
+import { blogPosts } from "@data/blog";
+import { site } from "@data/site";
+import { buildGraph, breadcrumbNode, businessId } from "@data/schema";
+
+const title = "Crawl Space Blog | Henry Crawl Solutions";
+const description = "Read crawl space moisture control, encapsulation, vapor barrier, wet crawl space, musty odor, and repair guides for McDonough and Henry County homeowners.";
+
+const blogSchema = {
+  "@type": "Blog",
+  name: title,
+  description,
+  url: new URL("/blog/", site.url).toString(),
+  publisher: { "@id": businessId },
+  blogPost: blogPosts.map((post) => ({
+    "@type": "BlogPosting",
+    headline: post.title,
+    description: post.description,
+    datePublished: post.date,
+    dateModified: post.dateModified ?? post.date,
+    url: new URL(`/blog/${post.slug}/`, site.url).toString()
+  }))
+};
+const schema = buildGraph([blogSchema, breadcrumbNode([{ label: "Home", href: "/" }, { label: "Blog" }])]);
+---
+
+<BaseLayout title={title} description={description} canonical="/blog/" schema={schema}>
+  <Breadcrumbs crumbs={[{ label: "Home", href: "/" }, { label: "Blog" }]} />
+  <PageHero
+    eyebrow="Guides & insight"
+    title="Crawl Space Blog"
+    text="Homeowner-friendly guides for crawl space encapsulation, vapor barriers, moisture problems, wet crawl spaces, and musty odors around McDonough, GA."
+  />
+  <section class="py-20">
+    <div class="container grid gap-5 md:grid-cols-2">
+      {blogPosts.map((post) => (
+        <article class="card group relative flex flex-col p-7 hover:-translate-y-1 hover:border-forest-200 hover:shadow-lift">
+          <span class="eyebrow"><span class="h-1.5 w-1.5 rounded-full bg-clay"></span>Crawl space guide</span>
+          <h2 class="mt-4 text-2xl font-extrabold leading-tight text-ink"><a class="focus-ring rounded-md after:absolute after:inset-0" href={`/blog/${post.slug}/`}>{post.title}</a></h2>
+          <p class="mt-4 text-sm leading-6 text-ink/65">{post.description}</p>
+          <span class="mt-6 inline-flex items-center gap-1.5 text-sm font-bold text-forest-700">
+            Read the guide
+            <svg aria-hidden="true" viewBox="0 0 24 24" class="h-4 w-4 transition group-hover:translate-x-1" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14" /><path d="m13 6 6 6-6 6" /></svg>
+          </span>
+        </article>
+      ))}
+    </div>
+  </section>
+  <section class="border-y border-stonewash/70 bg-sand/50 py-20">
+    <div class="container">
+      <InternalLinks
+        title="Core crawl space services"
+        links={[
+          { label: "Crawl Space Encapsulation", href: "/crawl-space-encapsulation/" },
+          { label: "Crawl Space Repair", href: "/crawl-space-repair/" },
+          { label: "Vapor Barrier Installation", href: "/vapor-barrier-installation/" },
+          { label: "Moisture Control", href: "/crawl-space-moisture-control/" },
+          { label: "Wet Crawl Space Repair", href: "/wet-crawl-space-repair/" }
+        ]}
+      />
+    </div>
+  </section>
+  <CTASection title="Need help with your crawl space?" />
+</BaseLayout>

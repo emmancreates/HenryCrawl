@@ -1,0 +1,29 @@
+---
+type FAQItem = {
+  question: string;
+  answer: string;
+  link?: string;
+  linkText?: string;
+};
+
+type Props = {
+  items: FAQItem[];
+};
+
+const { items } = Astro.props;
+---
+
+<div class="mx-auto grid max-w-3xl gap-3">
+  {items.map((item) => (
+    <details class="group card overflow-hidden p-0 [&[open]]:border-forest-200 [&[open]]:shadow-lift" name="faq">
+      <summary class="flex cursor-pointer list-none items-center justify-between gap-5 p-6 text-left text-base font-extrabold text-ink transition group-hover:text-forest-700">
+        {item.question}
+        <span class="grid h-9 w-9 shrink-0 place-items-center rounded-full bg-forest-50 text-lg text-forest-700 transition duration-300 group-open:rotate-45 group-open:bg-forest-700 group-open:text-white">+</span>
+      </summary>
+      <div class="px-6 pb-6 text-sm leading-7 text-ink/70">
+        <p>{item.answer}</p>
+        {item.link && <a class="focus-ring mt-3 inline-flex font-bold text-forest-700 hover:text-forest-600" href={item.link}>{item.linkText}</a>}
+      </div>
+    </details>
+  ))}
+</div>

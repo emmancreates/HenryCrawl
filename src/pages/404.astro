@@ -1,0 +1,38 @@
+---
+import BaseLayout from "@layouts/BaseLayout.astro";
+import { services } from "@data/services";
+
+const title = "Page Not Found | Henry Crawl Solutions";
+const description = "The page you were looking for could not be found. Explore crawl space services and service areas instead.";
+const popular = services.slice(0, 4);
+---
+
+<BaseLayout title={title} description={description} canonical="/404/" noindex>
+  <section class="relative overflow-hidden bg-mesh py-24">
+    <div class="pointer-events-none absolute -right-24 -top-20 h-72 w-72 rounded-full bg-forest-200/40 blur-3xl"></div>
+    <div class="pointer-events-none absolute -left-20 bottom-0 h-56 w-56 rounded-full bg-clay-100/40 blur-3xl"></div>
+    <div class="container relative max-w-2xl text-center animate-fade-up">
+      <span class="font-display text-7xl font-semibold text-forest-700 sm:text-8xl">404</span>
+      <h1 class="font-display mt-4 text-3xl font-semibold leading-tight text-ink sm:text-4xl">We could not find that page</h1>
+      <p class="mt-5 text-lg leading-8 text-ink/70">The link may be out of date. Here are a few good places to start instead.</p>
+      <div class="mt-9 flex flex-col justify-center gap-3 sm:flex-row">
+        <a class="btn-primary" href="/">Back to home</a>
+        <a class="btn-ghost" href="/contact/">Request an inspection</a>
+      </div>
+    </div>
+  </section>
+
+  <section class="py-16">
+    <div class="container">
+      <h2 class="font-display text-center text-2xl font-semibold text-ink">Popular crawl space services</h2>
+      <div class="mx-auto mt-8 grid max-w-3xl gap-3 sm:grid-cols-2">
+        {popular.map((service) => (
+          <a class="focus-ring card flex items-center justify-between gap-2 p-5 font-bold text-forest-700 transition hover:-translate-y-1 hover:border-forest-200 hover:shadow-lift" href={`/${service.slug}/`}>
+            {service.title}
+            <svg aria-hidden="true" viewBox="0 0 24 24" class="h-4 w-4 text-forest-400" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14" /><path d="m13 6 6 6-6 6" /></svg>
+          </a>
+        ))}
+      </div>
+    </div>
+  </section>
+</BaseLayout>

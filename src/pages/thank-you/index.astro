@@ -1,0 +1,37 @@
+---
+import BaseLayout from "@layouts/BaseLayout.astro";
+import { services } from "@data/services";
+import { site } from "@data/site";
+
+const title = "Thank You | Henry Crawl Solutions";
+const description = "Your crawl space inspection request was received. Henry Crawl Solutions will review the details and follow up.";
+const popular = services.slice(0, 3);
+---
+
+<BaseLayout title={title} description={description} canonical="/thank-you/" noindex>
+  <section class="relative overflow-hidden bg-mesh py-24">
+    <div class="pointer-events-none absolute -right-24 -top-20 h-72 w-72 rounded-full bg-forest-200/40 blur-3xl"></div>
+    <div class="container relative max-w-2xl text-center animate-fade-up">
+      <span class="mx-auto grid h-16 w-16 place-items-center rounded-2xl bg-forest-radial text-white shadow-glow">
+        <svg aria-hidden="true" viewBox="0 0 24 24" class="h-8 w-8" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14" /><path d="M22 4 12 14.01l-3-3" /></svg>
+      </span>
+      <h1 class="font-display mt-8 text-4xl font-semibold leading-tight text-ink sm:text-5xl">Thank you — your request was received</h1>
+      <p class="mt-6 text-lg leading-8 text-ink/70">We will review the details you shared about the crawl space and follow up. If it is urgent, you can also call <a class="font-bold text-forest-700" href={site.phoneHref}>{site.phone}</a>.</p>
+      <div class="mt-9 flex flex-col justify-center gap-3 sm:flex-row">
+        <a class="btn-primary" href="/">Back to home</a>
+        <a class="btn-ghost" href="/services/">Browse services</a>
+      </div>
+    </div>
+  </section>
+
+  <section class="py-16">
+    <div class="container">
+      <h2 class="font-display text-center text-2xl font-semibold text-ink">While you are here</h2>
+      <div class="mx-auto mt-8 grid max-w-3xl gap-3 sm:grid-cols-3">
+        {popular.map((service) => (
+          <a class="focus-ring card p-5 text-center font-bold text-forest-700 transition hover:-translate-y-1 hover:border-forest-200 hover:shadow-lift" href={`/${service.slug}/`}>{service.title}</a>
+        ))}
+      </div>
+    </div>
+  </section>
+</BaseLayout>

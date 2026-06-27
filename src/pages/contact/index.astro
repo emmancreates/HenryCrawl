@@ -1,0 +1,67 @@
+---
+import BaseLayout from "@layouts/BaseLayout.astro";
+import Breadcrumbs from "@components/Breadcrumbs.astro";
+import ContactForm from "@components/ContactForm.astro";
+import FAQ from "@components/FAQ.astro";
+import PageHero from "@components/PageHero.astro";
+import SectionHeading from "@components/SectionHeading.astro";
+import { genericContactFaqs } from "@data/faqs";
+import { site } from "@data/site";
+import { buildGraph, breadcrumbNode, businessId } from "@data/schema";
+
+const title = "Request a Free Crawl Space Inspection | Henry Crawl Solutions";
+const description = "Contact Henry Crawl Solutions to request a free crawl space inspection for moisture control, encapsulation, vapor barriers, drainage, dehumidifiers, and crawl space repair.";
+
+const contactSchema = {
+  "@type": "ContactPage",
+  name: title,
+  description,
+  url: new URL("/contact/", site.url).toString(),
+  mainEntity: { "@id": businessId }
+};
+const faqSchema = {
+  "@type": "FAQPage",
+  mainEntity: genericContactFaqs.map((faq) => ({
+    "@type": "Question",
+    name: faq.question,
+    acceptedAnswer: { "@type": "Answer", text: faq.answer }
+  }))
+};
+const schema = buildGraph([contactSchema, faqSchema, breadcrumbNode([{ label: "Home", href: "/" }, { label: "Contact" }])]);
+---
+
+<BaseLayout title={title} description={description} canonical="/contact/" schema={schema}>
+  <Breadcrumbs crumbs={[{ label: "Home", href: "/" }, { label: "Contact" }]} />
+  <PageHero
+    eyebrow="Free inspection request"
+    title="Request a Free Crawl Space Inspection"
+    text="Tell us what is happening under the home. Use the form for crawl space encapsulation, repair, vapor barrier, moisture control, wet crawl space, drainage, dehumidifier, mold-related, or basement waterproofing estimate requests."
+  />
+  <section class="py-16">
+    <div class="container grid gap-10 lg:grid-cols-[1fr_360px] lg:items-start">
+      <ContactForm />
+      <aside class="card p-7">
+        <h2 class="text-xl font-extrabold text-ink">Contact details</h2>
+        <div class="mt-5 space-y-3">
+          <a class="focus-ring flex items-center gap-3 rounded-2xl border border-stonewash/80 bg-sand/50 p-4 transition hover:border-forest-300" href={site.phoneHref}>
+            <span class="grid h-10 w-10 shrink-0 place-items-center rounded-xl bg-forest-radial text-white"><svg aria-hidden="true" viewBox="0 0 24 24" class="h-5 w-5" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6A19.79 19.79 0 0 1 2.1 4.18 2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72c.13.96.36 1.9.7 2.81a2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45c.91.34 1.85.57 2.81.7A2 2 0 0 1 22 16.92Z" /></svg></span>
+            <span><span class="block text-xs font-semibold uppercase tracking-wide text-ink/50">Phone</span><span class="font-bold text-ink">{site.phone}</span></span>
+          </a>
+          <a class="focus-ring flex items-center gap-3 rounded-2xl border border-stonewash/80 bg-sand/50 p-4 transition hover:border-forest-300" href={site.emailHref}>
+            <span class="grid h-10 w-10 shrink-0 place-items-center rounded-xl bg-forest-radial text-white"><svg aria-hidden="true" viewBox="0 0 24 24" class="h-5 w-5" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="5" width="18" height="14" rx="2" /><path d="m3 7 9 6 9-6" /></svg></span>
+            <span><span class="block text-xs font-semibold uppercase tracking-wide text-ink/50">Email</span><span class="font-bold text-ink">{site.email}</span></span>
+          </a>
+        </div>
+        <p class="mt-5 text-sm leading-6 text-ink/55">These are temporary placeholder contact details and should be replaced with the live phone number and email before launch.</p>
+      </aside>
+    </div>
+  </section>
+  <section class="border-t border-stonewash/70 bg-sand/50 py-20">
+    <div class="container">
+      <SectionHeading eyebrow="Good to know" title="Contact FAQ" align="center" />
+      <div class="mt-12">
+        <FAQ items={genericContactFaqs} />
+      </div>
+    </div>
+  </section>
+</BaseLayout>

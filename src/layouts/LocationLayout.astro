@@ -1,0 +1,210 @@
+---
+import BaseLayout from "@layouts/BaseLayout.astro";
+import Breadcrumbs from "@components/Breadcrumbs.astro";
+import CTASection from "@components/CTASection.astro";
+import FAQ from "@components/FAQ.astro";
+import InternalLinks from "@components/InternalLinks.astro";
+import ProcessSteps from "@components/ProcessSteps.astro";
+import SectionHeading from "@components/SectionHeading.astro";
+import ServiceGrid from "@components/ServiceGrid.astro";
+import { locationFaqs } from "@data/faqs";
+import { getLocationByCity, locationBlogLinks, type Location } from "@data/locations";
+import { services } from "@data/services";
+import { site } from "@data/site";
+import { buildGraph, breadcrumbNode, businessId } from "@data/schema";
+
+type Props = {
+  location: Location;
+};
+
+const { location } = Astro.props;
+const crumbs = [
+  { label: "Home", href: "/" },
+  { label: "Service Areas", href: "/service-areas/" },
+  { label: `${location.city}, GA` }
+];
+const faqs = locationFaqs(location);
+const nearbyLocations = location.nearby.map((city) => getLocationByCity(city)).filter(Boolean);
+const blogHref = locationBlogLinks[location.slug];
+const areaServed = [location.city, ...location.nearby].map((city) => ({
+  "@type": "City",
+  name: `${city}, GA`
+}));
+const serviceSchema = {
+  "@type": "Service",
+  name: `Crawl space encapsulation and repair in ${location.city}, GA`,
+  serviceType: "Crawl space encapsulation, repair, and moisture control",
+  description: location.metaDescription,
+  url: new URL(`/service-areas/${location.slug}/`, site.url).toString(),
+  areaServed,
+  provider: { "@id": businessId },
+  offers: {
+    "@type": "Offer",
+    description: `Free crawl space inspection and written estimate for ${location.city}, GA homeowners`,
+    availability: "https://schema.org/InStock",
+    areaServed: `${location.city}, GA`
+  }
+};
+const faqSchema = {
+  "@type": "FAQPage",
+  mainEntity: faqs.map((faq) => ({
+    "@type": "Question",
+    name: faq.question,
+    acceptedAnswer: { "@type": "Answer", text: faq.answer }
+  })),
+  speakable: {
+    "@type": "SpeakableSpecification",
+    cssSelector: ["h1", ".location-direct-answer"]
+  }
+};
+const howToSchema = {
+  "@type": "HowTo",
+  name: `How to request a crawl space inspection in ${location.city}, GA`,
+  description: `The steps to get a crawl space inspection and estimate from Henry Crawl Solutions in ${location.city}, ${location.county}, GA.`,
+  step: [
+    { name: "Describe the concern", text: "Share whether you are seeing water, a damaged vapor barrier, musty odor, mold concerns, or humidity under the home." },
+    { name: "Schedule an inspection", text: "A crawl space review identifies moisture sources, access constraints, drainage needs, and repair priorities." },
+    { name: "Review the estimate", text: "You receive a practical written scope for the recommended service, related repairs, and next steps for the crawl space." }
+  ].map((step, index) => ({
+    "@type": "HowToStep",
+    position: index + 1,
+    name: step.name,
+    text: step.text
+  }))
+};
+const schema = buildGraph([serviceSchema, faqSchema, howToSchema, breadcrumbNode(crumbs)]);
+---
+
+<BaseLayout title={location.metaTitle} description={location.metaDescription} canonical={`/service-areas/${location.slug}/`} schema={schema}>
+  <Breadcrumbs crumbs={crumbs} />
+  <section class="relative overflow-hidden border-b border-stonewash/70 bg-mesh py-16">
+    <div class="pointer-events-none absolute -right-24 -top-20 h-72 w-72 rounded-full bg-forest-200/40 blur-3xl"></div>
+    <div class="container relative max-w-4xl animate-fade-up">
+      <span class="eyebrow"><svg aria-hidden="true" viewBox="0 0 24 24" class="h-4 w-4 text-clay" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 10c0 6-8 12-8 12s-8-6-8-12a8 8 0 0 1 16 0Z" /><circle cx="12" cy="10" r="2.5" /></svg>Serving {location.city}, GA</span>
+      <h1 class="font-display mt-5 text-4xl font-semibold leading-[1.05] text-ink sm:text-5xl">{location.headline}</h1>
+      <p class="mt-6 text-lg leading-8 text-ink/70">{location.intro}</p>
+      <div class="mt-8 flex flex-col gap-3 sm:flex-row">
+        <a class="btn-primary" href="/contact/">{site.primaryCta}</a>
+        <a class="btn-ghost gap-2" href={site.phoneHref}>
+          <svg aria-hidden="true" viewBox="0 0 24 24" class="h-5 w-5" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6A19.79 19.79 0 0 1 2.1 4.18 2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72c.13.96.36 1.9.7 2.81a2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45c.91.34 1.85.57 2.81.7A2 2 0 0 1 22 16.92Z" /></svg>
+          <span class="font-bold">{site.phone}</span>
+        </a>
+      </div>
+      <p class="mt-4 text-sm text-ink/60">Call <a class="font-bold text-forest-700 underline-offset-4 hover:underline" href={site.phoneHref}>{site.phone}</a> for a free crawl space inspection in {location.city}, GA.</p>
+    </div>
+  </section>
+
+  <section class="py-20">
+    <div class="container grid gap-12 lg:grid-cols-[1.15fr_0.85fr] lg:items-start">
+      <div>
+        <SectionHeading
+          eyebrow={`Crawl space services in ${location.city}, GA`}
+          title={`Crawl space encapsulation, moisture control & repair in ${location.city}, GA`}
+        />
+        <p class="location-direct-answer mt-6 rounded-2xl border-l-4 border-forest-500 bg-forest-50/50 p-5 text-base font-semibold leading-7 text-ink/80">
+          Henry Crawl Solutions provides crawl space encapsulation, repair, vapor barrier installation, moisture control, drainage, dehumidifier installation, and mold cleanup throughout {location.city}, {location.county}, GA ({location.zips.join(", ")}). Every project starts with a free crawl space inspection and a written estimate — no one-size pricing.
+        </p>
+        <div class="mt-6 space-y-5">
+          {location.overview.map((paragraph) => (
+            <p class="text-base leading-8 text-ink/70">{paragraph}</p>
+          ))}
+        </div>
+      </div>
+      <aside class="card p-7 lg:sticky lg:top-28">
+        <h2 class="text-lg font-extrabold text-ink">{location.city} at a glance</h2>
+        <dl class="mt-5 space-y-4 text-sm">
+          <div>
+            <dt class="text-xs font-semibold uppercase tracking-wide text-ink/45">Call us</dt>
+            <dd class="mt-1"><a class="inline-flex items-center gap-2 text-lg font-extrabold text-forest-700 transition hover:text-forest-600" href={site.phoneHref}><svg aria-hidden="true" viewBox="0 0 24 24" class="h-5 w-5 text-forest-500" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6A19.79 19.79 0 0 1 2.1 4.18 2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72c.13.96.36 1.9.7 2.81a2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45c.91.34 1.85.57 2.81.7A2 2 0 0 1 22 16.92Z" /></svg>{site.phone}</a></dd>
+          </div>
+          <div>
+            <dt class="text-xs font-semibold uppercase tracking-wide text-ink/45">County</dt>
+            <dd class="mt-1 font-bold text-ink">{location.county}, GA</dd>
+          </div>
+          <div>
+            <dt class="text-xs font-semibold uppercase tracking-wide text-ink/45">ZIP codes</dt>
+            <dd class="mt-1 font-bold text-ink">{location.zips.join(" · ")}</dd>
+          </div>
+          <div>
+            <dt class="text-xs font-semibold uppercase tracking-wide text-ink/45">Neighborhoods &amp; areas</dt>
+            <dd class="mt-2 flex flex-wrap gap-2">
+              {location.neighborhoods.map((area) => (
+                <span class="rounded-full border border-stonewash bg-sand/60 px-3 py-1 text-xs font-semibold text-ink/75">{area}</span>
+              ))}
+            </dd>
+          </div>
+        </dl>
+        <a class="btn-primary mt-6 w-full" href="/contact/">Free inspection</a>
+      </aside>
+    </div>
+  </section>
+
+  <section class="border-y border-stonewash/70 bg-sand/50 py-20">
+    <div class="container">
+      <SectionHeading eyebrow="Local conditions" title={`What affects crawl spaces in ${location.city}, GA`} text={location.problemAngle} />
+      <div class="mt-10 grid gap-5 md:grid-cols-3">
+        {location.localFactors.map((factor) => (
+          <article class="card p-6">
+            <span class="grid h-11 w-11 place-items-center rounded-2xl bg-forest-radial text-white shadow-glow"><svg aria-hidden="true" viewBox="0 0 24 24" class="h-5 w-5" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3s6 7 6 11a6 6 0 0 1-12 0c0-4 6-11 6-11Z" /></svg></span>
+            <h3 class="mt-5 text-lg font-extrabold text-ink">{factor.heading}</h3>
+            <p class="mt-3 text-sm leading-6 text-ink/65">{factor.text}</p>
+          </article>
+        ))}
+      </div>
+    </div>
+  </section>
+
+  <section class="py-20">
+    <div class="container">
+      <SectionHeading eyebrow="Services" title={`Core crawl space services in ${location.city}`} align="center" />
+      <div class="mt-12">
+        <ServiceGrid limit={6} />
+      </div>
+    </div>
+  </section>
+
+  <section class="border-y border-stonewash/70 bg-sand/50 py-20">
+    <div class="container">
+      <SectionHeading eyebrow="Simple process" title="How the inspection process works" align="center" />
+      <div class="mt-12">
+        <ProcessSteps />
+      </div>
+    </div>
+  </section>
+
+  <section class="py-20">
+    <div class="container grid gap-8 lg:grid-cols-[1fr_1fr]">
+      <div>
+        <SectionHeading eyebrow="Nearby" title="Nearby service areas" />
+        <div class="mt-7 grid gap-3 sm:grid-cols-2">
+          {nearbyLocations.map((nearby) => nearby && (
+            <a class="focus-ring inline-flex items-center gap-2.5 rounded-2xl border border-stonewash/80 bg-white p-4 font-bold text-forest-700 transition hover:-translate-y-0.5 hover:border-forest-300 hover:shadow-card" href={`/service-areas/${nearby.slug}/`}>
+              <svg aria-hidden="true" viewBox="0 0 24 24" class="h-5 w-5 text-forest-500" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M20 10c0 6-8 12-8 12s-8-6-8-12a8 8 0 0 1 16 0Z" /><circle cx="12" cy="10" r="2.5" /></svg>
+              {nearby.city}, GA
+            </a>
+          ))}
+        </div>
+      </div>
+      <InternalLinks
+        title="More for homeowners"
+        links={[
+          { label: "All service areas", href: "/service-areas/" },
+          { label: "Request an inspection", href: "/contact/" },
+          { label: "Relevant crawl space article", href: blogHref },
+          ...services.slice(0, 3).map((service) => ({ label: service.title, href: `/${service.slug}/` }))
+        ]}
+      />
+    </div>
+  </section>
+
+  <section class="border-y border-stonewash/70 bg-sand/50 py-20">
+    <div class="container">
+      <SectionHeading eyebrow="Good to know" title={`${location.city} crawl space FAQ`} align="center" />
+      <div class="mt-12">
+        <FAQ items={faqs} />
+      </div>
+    </div>
+  </section>
+
+  <CTASection title={`Request a crawl space inspection in ${location.city}, GA`} />
+</BaseLayout>

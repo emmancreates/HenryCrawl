@@ -1,0 +1,23 @@
+---
+type Props = {
+  city: string;
+  href: string;
+  text?: string;
+};
+
+const { city, href, text = `Crawl space repair and moisture control information for homeowners in ${city}.` } = Astro.props;
+---
+
+<article class="card group relative overflow-hidden p-6 hover:-translate-y-1 hover:border-forest-200 hover:shadow-lift">
+  <div class="mb-4 flex items-center gap-2.5">
+    <span class="grid h-9 w-9 place-items-center rounded-xl bg-forest-50 text-forest-600 transition group-hover:bg-forest-radial group-hover:text-white">
+      <svg aria-hidden="true" viewBox="0 0 24 24" class="h-5 w-5" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M20 10c0 6-8 12-8 12s-8-6-8-12a8 8 0 0 1 16 0Z" /><circle cx="12" cy="10" r="2.5" /></svg>
+    </span>
+    <h3 class="text-lg font-extrabold text-ink"><a class="focus-ring rounded-md after:absolute after:inset-0" href={href}>{city}</a></h3>
+  </div>
+  <p class="text-sm leading-6 text-ink/65">{text}</p>
+  <span class="mt-5 inline-flex items-center gap-1.5 text-sm font-bold text-forest-700">
+    View service area
+    <svg aria-hidden="true" viewBox="0 0 24 24" class="h-4 w-4 transition group-hover:translate-x-1" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14" /><path d="m13 6 6 6-6 6" /></svg>
+  </span>
+</article>

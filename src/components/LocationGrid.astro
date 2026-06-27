@@ -1,0 +1,17 @@
+---
+import LocationCard from "@components/LocationCard.astro";
+import { locations } from "@data/locations";
+
+type Props = {
+  slugs?: string[];
+};
+
+const { slugs } = Astro.props;
+const shownLocations = slugs ? locations.filter((location) => slugs.includes(location.slug)) : locations;
+---
+
+<div class="grid gap-5 md:grid-cols-2 lg:grid-cols-4">
+  {shownLocations.map((location) => (
+    <LocationCard city={`${location.city}, GA`} href={`/service-areas/${location.slug}/`} text={location.problemAngle} />
+  ))}
+</div>

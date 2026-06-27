@@ -1,0 +1,27 @@
+---
+const steps = [
+  {
+    title: "Describe the concern",
+    text: "Share whether you are seeing water, damaged vapor barrier, musty odor, mold concerns, or humidity under the home."
+  },
+  {
+    title: "Schedule an inspection",
+    text: "A crawl space review helps identify moisture sources, access constraints, drainage needs, and repair priorities."
+  },
+  {
+    title: "Review the estimate",
+    text: "You receive a practical scope for the recommended service, related repairs, and next steps for the crawl space."
+  }
+];
+---
+
+<div class="relative grid gap-6 md:grid-cols-3">
+  <div class="pointer-events-none absolute left-[12%] right-[12%] top-[2.1rem] hidden border-t-2 border-dashed border-forest-200 md:block"></div>
+  {steps.map((step, index) => (
+    <article class="card relative p-7">
+      <span class="font-display grid h-12 w-12 place-items-center rounded-2xl bg-forest-radial text-lg font-semibold text-white shadow-glow">{index + 1}</span>
+      <h3 class="mt-6 text-xl font-extrabold text-ink">{step.title}</h3>
+      <p class="mt-3 text-sm leading-6 text-ink/65">{step.text}</p>
+    </article>
+  ))}
+</div>
