@@ -28,7 +28,7 @@ const articleSchema = {
   description: post.description,
   datePublished: post.date,
   dateModified: post.dateModified ?? post.date,
-  image: new URL("/crawl-space-hero.png", site.url).toString(),
+  image: new URL("/crawl-space-hero.jpg", site.url).toString(),
   author: { "@id": businessId },
   publisher: { "@id": businessId },
   isPartOf: { "@id": `${site.url}/#website` },

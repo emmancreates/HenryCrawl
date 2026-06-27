@@ -44,10 +44,19 @@ const { title, description, canonical, image, schema, noindex } = Astro.props;
     <meta name="theme-color" content="#1f5132" />
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    {/* Load fonts without blocking render: fetch as print, then apply on load. */}
     <link
       rel="stylesheet"
       href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,500;9..144,600;9..144,700&family=Inter:wght@400;500;600;700;800&display=swap"
+      media="print"
+      onload="this.media='all'"
     />
+    <noscript>
+      <link
+        rel="stylesheet"
+        href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,500;9..144,600;9..144,700&family=Inter:wght@400;500;600;700;800&display=swap"
+      />
+    </noscript>
     <SEO title={title} description={description} canonical={canonical} image={image} noindex={noindex} />
     {schema && <Schema schema={schema} />}
   </head>

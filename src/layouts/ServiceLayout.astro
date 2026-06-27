@@ -17,6 +17,7 @@ type Props = {
 
 const { service } = Astro.props;
 const related = getRelatedServices(service.slug);
+const serviceImageWebp = service.image.src.replace(/\.(png|jpe?g)$/i, ".webp");
 const title = service.metaTitle;
 const description = service.metaDescription;
 const pageUrl = new URL(`/${service.slug}/`, site.url).toString();
@@ -86,15 +87,19 @@ const schema = buildGraph([serviceSchema, faqSchema, howToSchema, breadcrumbNode
         </div>
       </div>
       <aside class="card overflow-hidden">
-        <img
-          class="aspect-[3/2] w-full object-cover"
-          src={service.image.src}
-          alt={service.image.alt}
-          width="1200"
-          height="800"
-          loading="eager"
-          decoding="async"
-        />
+        <picture class="contents">
+          <source srcset={serviceImageWebp} type="image/webp" />
+          <img
+            class="aspect-[3/2] w-full object-cover"
+            src={service.image.src}
+            alt={service.image.alt}
+            width="1200"
+            height="800"
+            loading="eager"
+            fetchpriority="high"
+            decoding="async"
+          />
+        </picture>
         <div class="p-7">
           <h2 class="text-lg font-extrabold text-ink">Related search topics</h2>
           <ul class="mt-5 space-y-3 text-sm text-ink/70">

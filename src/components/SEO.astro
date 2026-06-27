@@ -9,7 +9,7 @@ type Props = {
   noindex?: boolean;
 };
 
-const { title, description, canonical = Astro.url.pathname, image = "/crawl-space-hero.png", noindex = false } = Astro.props;
+const { title, description, canonical = Astro.url.pathname, image = "/crawl-space-hero.jpg", noindex = false } = Astro.props;
 const canonicalUrl = new URL(canonical, site.url).toString();
 const imageUrl = new URL(image, site.url).toString();
 ---

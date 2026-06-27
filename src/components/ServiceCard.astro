@@ -12,21 +12,25 @@ type Props = {
 };
 
 const { title, href, excerpt, slug, image, imageAlt } = Astro.props;
+const imageWebp = image?.replace(/\.(png|jpe?g)$/i, ".webp");
 const iconPaths = slug ? serviceIcons[slug] : '<path d="M4 12c3-4 6 4 9 0s4-4 7-1"/><path d="M4 7c3-4 6 4 9 0s4-4 7-1"/>';
 ---
 
 <article class="card group relative overflow-hidden hover:-translate-y-1 hover:border-forest-200 hover:shadow-lift">
   <div class="pointer-events-none absolute -right-12 -top-12 h-28 w-28 rounded-full bg-forest-50 opacity-0 transition duration-300 group-hover:opacity-100"></div>
   {image && imageAlt && (
-    <img
-      class="aspect-[3/2] w-full object-cover transition duration-500 group-hover:scale-[1.03]"
-      src={image}
-      alt={imageAlt}
-      width="1200"
-      height="800"
-      loading="lazy"
-      decoding="async"
-    />
+    <picture class="contents">
+      <source srcset={imageWebp} type="image/webp" />
+      <img
+        class="aspect-[3/2] w-full object-cover transition duration-500 group-hover:scale-[1.03]"
+        src={image}
+        alt={imageAlt}
+        width="1200"
+        height="800"
+        loading="lazy"
+        decoding="async"
+      />
+    </picture>
   )}
   <div class:list={["relative", image ? "p-6" : "p-7"]}>
     <div class="mb-6 grid h-14 w-14 place-items-center rounded-2xl bg-forest-radial text-white shadow-glow transition duration-300 group-hover:scale-105">
