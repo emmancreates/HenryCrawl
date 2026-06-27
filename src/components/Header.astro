@@ -9,7 +9,7 @@ const isActive = (href: string) => (href === "/" ? path === "/" : path.startsWit
 <header class="sticky top-0 z-50 border-b border-stonewash/70 bg-cream/80 backdrop-blur-xl">
   <div class="container flex min-h-[4.75rem] items-center justify-between gap-5">
     <a href="/" class="focus-ring group rounded-2xl transition group-hover:scale-105" aria-label={`${site.name} home`}>
-      <Logo size="h-10 w-10" markClass="text-forest-700 transition group-hover:scale-105" />
+      <Logo size="h-28 w-28" markClass="text-forest-700 transition group-hover:scale-105" wordmarkClass="text-ink text-2xl" />
     </a>
 
     <nav class="hidden items-center gap-1 rounded-full border border-stonewash/70 bg-white/60 p-1 lg:flex" aria-label="Primary navigation">
@@ -26,7 +26,7 @@ const isActive = (href: string) => (href === "/" ? path === "/" : path.startsWit
     </nav>
 
     <div class="flex items-center gap-3">
-      <a class="focus-ring inline-flex items-center gap-2 rounded-full border border-forest-200 bg-forest-50 px-3 py-2 text-forest-700 transition hover:-translate-y-0.5 hover:border-forest-400 hover:bg-forest-100 sm:px-4 sm:py-2.5" href={site.phoneHref} aria-label={`Call ${site.phone}`}>
+      <a class="focus-ring inline-flex items-center gap-1.5 rounded-full border border-forest-200 bg-forest-50 px-2.5 py-1.5 text-forest-700 transition hover:-translate-y-0.5 hover:border-forest-400 hover:bg-forest-100" href={site.phoneHref} aria-label={`Call ${site.phone}`}>
         <svg aria-hidden="true" viewBox="0 0 24 24" class="h-4 w-4 shrink-0" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
           <path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72c.13.96.36 1.9.7 2.81a2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45c.91.34 1.85.57 2.81.7A2 2 0 0 1 22 16.92Z" />
         </svg>
